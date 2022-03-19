@@ -1,5 +1,7 @@
-import { useNavigation } from '@react-navigation/core';
 import React, { useRef, useState } from 'react';
+import { useNavigation } from '@react-navigation/core';
+
+
 import { TextInput } from 'react-native';
 
 import { Background } from '../../components/Background';
@@ -23,7 +25,7 @@ export function Dashboard() {
   const inputRef = useRef<TextInput>(null);
 
   const { navigate } = useNavigation();
-
+  //const { navigate }: NavigationProp<ParamListBase> = useNavigation();  
   const { addRepository, repositories } = useRepositories();
 
   function handleAddRepository() {
@@ -32,6 +34,10 @@ export function Dashboard() {
      * - call addRepository function sending inputText value;
      * - clean inputText value.
      */
+
+    addRepository(inputText);
+    setInputText('');
+
     inputRef.current?.blur();
   }
 
@@ -44,6 +50,16 @@ export function Dashboard() {
      *  repositoryId: id of the repository
      * })
      */
+    navigate('Repository',{repositoryId: id});
+
+  }
+  function handleChangeInputText(text: string) {
+    // Update searchText value
+    if(!text){
+      setInputText('');      
+      return;
+    }       
+    setInputText(text);
   }
 
   return (
@@ -62,6 +78,7 @@ export function Dashboard() {
                * changes:
                * onChangeText={YOUR CODE HERE}
                */
+              onChangeText={handleChangeInputText}
               onSubmitEditing={handleAddRepository}
               returnKeyType="send"
               autoCapitalize='none'
@@ -76,6 +93,7 @@ export function Dashboard() {
              * empty (use disabled prop to this):
              * disabled={CONDITION HERE}
              */
+              disabled={!inputText}
             >
               <Icon name="search" size={20} />
             </InputButton>
